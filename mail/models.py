@@ -3,12 +3,15 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    id = models.AutoField(primary_key=True)
 
 
 class Email(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="emails")
-    sender = models.ForeignKey("User", on_delete=models.PROTECT, related_name="emails_sent")
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        "User", on_delete=models.CASCADE, related_name="emails")
+    sender = models.ForeignKey(
+        "User", on_delete=models.PROTECT, related_name="emails_sent")
     recipients = models.ManyToManyField("User", related_name="emails_received")
     subject = models.CharField(max_length=255)
     body = models.TextField(blank=True)
