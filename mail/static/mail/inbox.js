@@ -36,6 +36,7 @@ function compose_email() {
       .then(response => response.json())
       .then(result => {
         console.log(result);
+        alert('Email Sent to ' + recipients);
         load_mailbox('sent');
       })
       .catch(error => console.log('Error:', error));
