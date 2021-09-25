@@ -34,15 +34,16 @@ function compose_email() {
       })
     })
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+        console.log(result);
+        load_mailbox('sent');
+      })
       .catch(error => console.log('Error:', error));
-
     return false;
   };
 }
 
 function load_mailbox(mailbox) {
-
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
