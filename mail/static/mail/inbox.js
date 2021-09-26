@@ -35,9 +35,8 @@ function compose_email() {
     })
       .then(response => response.json())
       .then(result => {
-        console.log(result);
-        alert('Email Sent to ' + recipients);
-        load_mailbox('sent');
+        alert(result.message || result.error);
+        if (result.message) load_mailbox('sent'); //if successful, load Sent view. Otherwise, stay on Compose.  
       })
       .catch(error => console.log('Error:', error));
     return false;
