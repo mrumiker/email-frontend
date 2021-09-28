@@ -56,12 +56,12 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
     .then(response => response.json())
     .then(emails => {
-      console.log(emails);
       emails.forEach(email => {
         let div = document.createElement('div');
         if (mailbox === 'sent') {
-          div.innerHTML = `To ${email.recipients}    Subject: ${email.subject}`
-        } else div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`
+          div.innerHTML = `To ${email.recipients}    Subject: ${email.subject}`;
+        } else div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
+        div.addEventListener('click', () => alert('You clicked email ' + email.id));
         container.append(div);
       })
     })
