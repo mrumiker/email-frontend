@@ -96,3 +96,12 @@ function load_message(messageId) {
     })
     .catch(error => console.log('Error: ' + error));
 }
+
+function archive_message(messageId) {
+  fetch(`/emails/${messageId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: true,
+    })
+  })
+}
