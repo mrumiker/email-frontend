@@ -63,9 +63,28 @@ function load_mailbox(mailbox) {
         if (mailbox === 'sent') {
           div.innerHTML = `To ${email.recipients}    Subject: ${email.subject}`;
         } else div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
-        div.addEventListener('click', () => alert('You clicked email ' + email.id));
+        div.addEventListener('click', () => load_message(email.id));
         container.append(div);
       })
+    })
+    .catch(error => console.log('Error: ' + error));
+}
+
+function load_message(messageId) {
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#message-view').style.display = 'block';
+  document.querySelector('#compose-view').style.display = 'none';
+
+  //Get message
+  fetch(`/emails/${messageId}`)
+    .then(response => response.json())
+    .then(email => {
+      document.querySelector('#message-subject').innerHTML = email.subject;
+      document.querySelector('#message-from').innerHTML = `From: ${email.sender}`;
+      document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
+      document.querySelector('#message-time').innerHTML = email.timestamp;
+      document.querySelector('#message-body').innerHTML = email.body;
+      email.read = true;
     })
     .catch(error => console.log('Error: ' + error));
 }
