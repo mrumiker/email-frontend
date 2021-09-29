@@ -62,7 +62,10 @@ function load_mailbox(mailbox) {
         let div = document.createElement('div');
         if (mailbox === 'sent') {
           div.innerHTML = `To ${email.recipients}    Subject: ${email.subject}`;
-        } else div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
+        } else {
+          div.style.backgroundColor = email.read ? 'lightgray' : 'white';
+          div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
+        }
         div.addEventListener('click', () => load_message(email.id));
         container.append(div);
       })
@@ -84,7 +87,12 @@ function load_message(messageId) {
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
       document.querySelector('#message-time').innerHTML = email.timestamp;
       document.querySelector('#message-body').innerHTML = email.body;
-      email.read = true;
+      fetch(`/emails/${messageId}`, { //Mark message as read
+        method: 'PUT',
+        body: JSON.stringify({
+          read: true,
+        })
+      })
     })
     .catch(error => console.log('Error: ' + error));
 }
