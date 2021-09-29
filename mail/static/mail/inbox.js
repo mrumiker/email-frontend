@@ -105,3 +105,13 @@ function archive_message(messageId) {
     })
   })
 }
+
+function unarchive_message(messageId) {
+  fetch(`/emails/${messageId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: false,
+    })
+  })
+}
+
