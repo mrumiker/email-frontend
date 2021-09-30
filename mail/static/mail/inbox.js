@@ -66,14 +66,14 @@ function load_mailbox(mailbox) {
           div.style.backgroundColor = email.read ? 'lightgray' : 'white';
           div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
         }
-        div.addEventListener('click', () => load_message(email.id));
+        div.addEventListener('click', () => load_message(email.id, mailbox));
         container.append(div);
       })
     })
     .catch(error => console.log('Error: ' + error));
 }
 
-function load_message(messageId) {
+function load_message(messageId, mailbox) {
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#message-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -87,6 +87,19 @@ function load_message(messageId) {
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
       document.querySelector('#message-time').innerHTML = email.timestamp;
       document.querySelector('#message-body').innerHTML = email.body;
+      if (mailbox === 'sent') {
+        document.querySelector('#message-buttons').style.display = 'none';
+      } else {
+        document.querySelector('#message-buttons').style.display = 'block';
+        const archiveButton = document.querySelector('#archive');
+        archiveButton.addEventListener('click', () => archive_message(messageId, email.archived))
+        if (mailbox === 'inbox') {
+          archiveButton.innerHTML = 'Archive Message';
+        } else {
+          archiveButton.innerHTML = 'UnArchive Message';
+        }
+
+      }
       fetch(`/emails/${messageId}`, { //Mark message as read
         method: 'PUT',
         body: JSON.stringify({
@@ -97,21 +110,13 @@ function load_message(messageId) {
     .catch(error => console.log('Error: ' + error));
 }
 
-function archive_message(messageId) {
+function archive_message(messageId, isArchived) {
   fetch(`/emails/${messageId}`, {
     method: 'PUT',
     body: JSON.stringify({
-      archived: true,
+      archived: !isArchived,
     })
   })
 }
 
-function unarchive_message(messageId) {
-  fetch(`/emails/${messageId}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      archived: false,
-    })
-  })
-}
 
