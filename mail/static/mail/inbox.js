@@ -59,12 +59,13 @@ function load_mailbox(mailbox) {
     .then(response => response.json())
     .then(emails => {
       emails.forEach(email => {
-        let div = document.createElement('div');
+        const div = document.createElement('div');
+        div.classList.add('list-group-item');
         if (mailbox === 'sent') {
-          div.innerHTML = `To ${email.recipients}    Subject: ${email.subject}`;
+          div.innerHTML = `<div class="panel-body">To ${email.recipients}    Subject: ${email.subject}</div>`;
         } else {
           div.style.backgroundColor = email.read ? 'lightgray' : 'white';
-          div.innerHTML = `From ${email.sender}    Subject: ${email.subject}`;
+          div.innerHTML = `<div class="panel-body">From ${email.sender}    Subject: ${email.subject}</div>`;
         }
         div.addEventListener('click', () => load_message(email.id, mailbox));
         container.append(div);
