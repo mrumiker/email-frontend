@@ -94,8 +94,12 @@ function load_message(messageId, mailbox) {
         const archiveButton = document.querySelector('#archive');
         archiveButton.addEventListener('click', () => archive_message(messageId, email.archived))
         if (mailbox === 'inbox') {
+          archiveButton.classList.remove("btn-outline-danger");
+          archiveButton.classList.add("btn-danger");
           archiveButton.innerHTML = 'Archive Message';
         } else {
+          archiveButton.classList.remove("btn-danger");
+          archiveButton.classList.add("btn-outline-danger");
           archiveButton.innerHTML = 'UnArchive Message';
         }
 
