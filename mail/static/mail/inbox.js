@@ -87,20 +87,23 @@ function load_message(messageId, mailbox) {
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
       document.querySelector('#message-time').innerHTML = email.timestamp;
       document.querySelector('#message-body').innerHTML = email.body;
-      if (mailbox === 'sent') {
-        document.querySelector('#message-buttons').style.display = 'none';
-      } else {
-        document.querySelector('#message-buttons').style.display = 'block';
-        const archiveButton = document.querySelector('#archive');
-        archiveButton.addEventListener('click', () => archive_message(messageId, email.archived))
-        if (mailbox === 'inbox') {
-          archiveButton.classList.remove("btn-outline-danger");
-          archiveButton.classList.add("btn-danger");
-          archiveButton.innerHTML = 'Archive Message';
+      const buttonContainer = document.querySelector('#message-buttons');
+      while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
+      if (mailbox !== 'sent') {
+        if (email.archived) {
+          const unarchiveButton = document.createElement('button');
+          unarchiveButton.innerHTML = 'UnArchive Message';
+          unarchiveButton.setAttribute('type', 'button');
+          unarchiveButton.classList.add('btn', 'btn-outline-danger');
+          unarchiveButton.addEventListener('click', () => unarchive_message(messageId));
+          buttonContainer.append(unarchiveButton);
         } else {
-          archiveButton.classList.remove("btn-danger");
-          archiveButton.classList.add("btn-outline-danger");
-          archiveButton.innerHTML = 'UnArchive Message';
+          const archiveButton = document.createElement('button');
+          archiveButton.innerHTML = 'Archive Message';
+          archiveButton.setAttribute('type', 'button');
+          archiveButton.classList.add('btn', 'btn-danger');
+          archiveButton.addEventListener('click', () => archive_message(messageId));
+          buttonContainer.append(archiveButton);
         }
 
       }
@@ -114,13 +117,46 @@ function load_message(messageId, mailbox) {
     .catch(error => console.log('Error: ' + error));
 }
 
-function archive_message(messageId, isArchived) {
+function archive_message(messageId) {
   fetch(`/emails/${messageId}`, {
     method: 'PUT',
     body: JSON.stringify({
-      archived: !isArchived,
+      archived: true,
     })
   })
+    .then(res => {
+      console.log(res);
+      alert('Message Archived');
+      load_mailbox('inbox');
+    })
+  return false;
 }
+// .then(response => {
+//   if (isArchived) {
+//     alert('Message removed from Archive');
+//     load_mailbox('inbox');
+//   } else {
+//     alert('Message Archived');
+//     load_mailbox('archive');
+//   }
+// })
+
+
+function unarchive_message(messageId) {
+  fetch(`/emails/${messageId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: false,
+    })
+  })
+    .then(res => {
+      console.log(res);
+      alert('Message UnArchived');
+      load_mailbox('archive');
+    })
+
+  return false;
+}
+
 
 
