@@ -60,12 +60,12 @@ function load_mailbox(mailbox) {
     .then(emails => {
       emails.forEach(email => {
         const div = document.createElement('div');
-        div.classList.add('list-group-item');
+        div.classList.add('list-group-item', 'container');
         if (mailbox === 'sent') {
-          div.innerHTML = `<div class="panel-body">To ${email.recipients}    Subject: ${email.subject}</div>`;
+          div.innerHTML = `<div class="row"><div class="col">To: ${email.recipients}</div><div class="col">Subject: ${email.subject}</div><div class="col"></div></div>`;
         } else {
-          div.style.backgroundColor = email.read ? 'lightgray' : 'white';
-          div.innerHTML = `<div class="panel-body">From ${email.sender}    Subject: ${email.subject}</div>`;
+          if (email.read) div.classList.add('list-group-item-secondary');
+          div.innerHTML = `<div class="row"><div class="col">From: ${email.sender}</div><div class="col">Subject: ${email.subject}</div><div class="col"></div></div>`;
         }
         div.addEventListener('click', () => load_message(email.id, mailbox));
         container.append(div);
