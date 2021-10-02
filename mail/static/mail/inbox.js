@@ -62,10 +62,10 @@ function load_mailbox(mailbox) {
         const div = document.createElement('div');
         div.classList.add('list-group-item', 'container');
         if (mailbox === 'sent') {
-          div.innerHTML = `<div class="row"><div class="col">To: ${email.recipients}</div><div class="col">${email.subject}</div><div class="col"></div></div>`;
+          div.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div></div>`;
         } else {
           if (email.read) div.classList.add('list-group-item-secondary');
-          div.innerHTML = `<div class="row"><div class="col">From: ${email.sender}</div><div class="col">${email.subject}</div><div class="col"></div></div>`;
+          div.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div></div>`;
         }
         div.addEventListener('click', () => load_message(email.id, mailbox));
         container.append(div);
@@ -83,15 +83,16 @@ function load_message(messageId, mailbox) {
   fetch(`/emails/${messageId}`)
     .then(response => response.json())
     .then(email => {
+      console.log(email.recipients);
       document.querySelector('#message-subject').innerHTML = email.subject;
       document.querySelector('#message-from').innerHTML = `From: ${email.sender}`;
-      document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
+      document.querySelector('#message-to').innerHTML = `To: ${email.recipients.join(', ')}`;
       document.querySelector('#message-time').innerHTML = email.timestamp;
       document.querySelector('#message-body').innerHTML = mailbox === 'sent' && format_message(email.body) || `${format_message(email.body)}<hr/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
-      document.querySelector('#reply-button').addEventListener('click', () => reply(email));
       const buttonContainer = document.querySelector('#message-buttons');
       while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
       if (mailbox !== 'sent') {
+        document.querySelector('#reply-button').addEventListener('click', () => reply(email));
         if (email.archived) {
           const unarchiveButton = document.createElement('button');
           unarchiveButton.innerHTML = 'UnArchive Message';
