@@ -59,18 +59,19 @@ function load_mailbox(mailbox) {
     .then(response => response.json())
     .then(emails => {
       emails.forEach(email => {
-        const div = document.createElement('div');
-        div.classList.add('list-group-item', 'list-group-item-action', 'container');
+        const message = document.createElement('a');
+        message.setAttribute('href', '#');
+        message.classList.add('list-group-item', 'list-group-item-action', 'container');
         if (mailbox === 'sent') {
-          div.style.color = 'black';
-          div.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div></div>`;
+          message.style.color = 'black';
+          message.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div></div>`;
         } else {
-          if (email.read) div.classList.add('list-group-item-secondary');
-          else div.style.color = 'black';
-          div.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div></div>`;
+          if (email.read) message.classList.add('list-group-item-secondary');
+          else message.style.color = 'black';
+          message.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div></div>`;
         }
-        div.addEventListener('click', () => load_message(email.id, mailbox));
-        container.append(div);
+        message.addEventListener('click', () => load_message(email.id, mailbox));
+        container.append(message);
       })
     })
     .catch(error => console.log('Error: ' + error));
