@@ -86,9 +86,9 @@ function load_message(messageId, mailbox) {
       document.querySelector('#message-subject').innerHTML = email.subject;
       document.querySelector('#message-from').innerHTML = `From: ${email.sender}`;
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
-      document.querySelector('#message-time').innerHTML = mailbox === 'sent' && email.timestamp || `${email.timestamp}<br/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
+      document.querySelector('#message-time').innerHTML = email.timestamp;
+      document.querySelector('#message-body').innerHTML = mailbox === 'sent' && format_message(email.body) || `${format_message(email.body)}<hr/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
       document.querySelector('#reply-button').addEventListener('click', () => reply(email));
-      document.querySelector('#message-body').innerHTML = `${email.body}`;
       const buttonContainer = document.querySelector('#message-buttons');
       while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
       if (mailbox !== 'sent') {
@@ -164,5 +164,4 @@ ${email.body}`
   return false;
 }
 
-
-
+const format_message = body => body.split('\n').map(line => `<p>${line}</p>`).join('\n');
