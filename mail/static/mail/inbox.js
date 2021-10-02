@@ -86,8 +86,9 @@ function load_message(messageId, mailbox) {
       document.querySelector('#message-subject').innerHTML = email.subject;
       document.querySelector('#message-from').innerHTML = `From: ${email.sender}`;
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients}`;
-      document.querySelector('#message-time').innerHTML = `${email.timestamp}<br/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
-      document.querySelector('#message-body').innerHTML = email.body;
+      document.querySelector('#message-time').innerHTML = mailbox === 'sent' && email.timestamp || `${email.timestamp}<br/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
+      document.querySelector('#reply-button').addEventListener('click', () => reply(email));
+      document.querySelector('#message-body').innerHTML = `${email.body}`;
       const buttonContainer = document.querySelector('#message-buttons');
       while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
       if (mailbox !== 'sent') {
@@ -132,16 +133,6 @@ function archive_message(messageId) {
     })
   return false;
 }
-// .then(response => {
-//   if (isArchived) {
-//     alert('Message removed from Archive');
-//     load_mailbox('inbox');
-//   } else {
-//     alert('Message Archived');
-//     load_mailbox('archive');
-//   }
-// })
-
 
 function unarchive_message(messageId) {
   fetch(`/emails/${messageId}`, {
@@ -155,6 +146,20 @@ function unarchive_message(messageId) {
       alert('Message UnArchived');
       load_mailbox('archive');
     })
+
+  return false;
+}
+
+function reply(email) {
+  compose_email();
+  document.querySelector('#compose-recipients').value = email.sender;
+  document.querySelector('#compose-subject').value = email.subject.startsWith('Re:') && email.subject || `Re: ${email.subject}`;
+  document.querySelector('#compose-body').value =
+    `
+    
+On ${email.timestamp} ${email.sender} wrote:
+
+${email.body}`
 
   return false;
 }
