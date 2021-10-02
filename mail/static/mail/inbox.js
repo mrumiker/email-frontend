@@ -60,11 +60,13 @@ function load_mailbox(mailbox) {
     .then(emails => {
       emails.forEach(email => {
         const div = document.createElement('div');
-        div.classList.add('list-group-item', 'container');
+        div.classList.add('list-group-item', 'list-group-item-action', 'container');
         if (mailbox === 'sent') {
+          div.style.color = 'black';
           div.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div></div>`;
         } else {
           if (email.read) div.classList.add('list-group-item-secondary');
+          else div.style.color = 'black';
           div.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div></div>`;
         }
         div.addEventListener('click', () => load_message(email.id, mailbox));
@@ -83,12 +85,11 @@ function load_message(messageId, mailbox) {
   fetch(`/emails/${messageId}`)
     .then(response => response.json())
     .then(email => {
-      console.log(email.recipients);
       document.querySelector('#message-subject').innerHTML = email.subject;
       document.querySelector('#message-from').innerHTML = `From: ${email.sender}`;
       document.querySelector('#message-to').innerHTML = `To: ${email.recipients.join(', ')}`;
       document.querySelector('#message-time').innerHTML = email.timestamp;
-      document.querySelector('#message-body').innerHTML = mailbox === 'sent' && format_message(email.body) || `${format_message(email.body)}<hr/><button type="button" class="btn btn-outline-primary my-1" id="reply-button">Reply</button>`;
+      document.querySelector('#message-body').innerHTML = mailbox === 'sent' && format_message(email.body) || `${format_message(email.body)}<hr/><button type="button" class="btn btn-warning my-1" id="reply-button">Reply</button>`;
       const buttonContainer = document.querySelector('#message-buttons');
       while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
       if (mailbox !== 'sent') {
@@ -97,14 +98,14 @@ function load_message(messageId, mailbox) {
           const unarchiveButton = document.createElement('button');
           unarchiveButton.innerHTML = 'UnArchive Message';
           unarchiveButton.setAttribute('type', 'button');
-          unarchiveButton.classList.add('btn', 'btn-outline-danger');
+          unarchiveButton.classList.add('btn', 'btn-outline-warning');
           unarchiveButton.addEventListener('click', () => unarchive_message(messageId));
           buttonContainer.append(unarchiveButton);
         } else {
           const archiveButton = document.createElement('button');
           archiveButton.innerHTML = 'Archive Message';
           archiveButton.setAttribute('type', 'button');
-          archiveButton.classList.add('btn', 'btn-danger');
+          archiveButton.classList.add('btn', 'btn-outline-warning');
           archiveButton.addEventListener('click', () => archive_message(messageId));
           buttonContainer.append(archiveButton);
         }
@@ -128,7 +129,6 @@ function archive_message(messageId) {
     })
   })
     .then(res => {
-      console.log(res);
       alert('Message Archived');
       load_mailbox('inbox');
     })
@@ -143,7 +143,6 @@ function unarchive_message(messageId) {
     })
   })
     .then(res => {
-      console.log(res);
       alert('Message UnArchived');
       load_mailbox('archive');
     })
