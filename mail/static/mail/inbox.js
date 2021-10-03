@@ -62,13 +62,14 @@ function load_mailbox(mailbox) {
         const message = document.createElement('a');
         message.setAttribute('href', '#');
         message.classList.add('list-group-item', 'list-group-item-action', 'container');
+        const shortDate = email.timestamp.split(' ').slice(0, 2).join(' ');
         if (mailbox === 'sent') {
           message.style.color = 'black';
-          message.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div></div>`;
+          message.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div><div class="col-1">${shortDate}</div></div>`;
         } else {
           if (email.read) message.classList.add('list-group-item-secondary');
           else message.style.color = 'black';
-          message.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div></div>`;
+          message.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div><div class="col-1">${shortDate}</div></div>`;
         }
         message.addEventListener('click', () => load_message(email.id, mailbox));
         container.append(message);
