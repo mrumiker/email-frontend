@@ -2,17 +2,25 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>{% block title %}Mail{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
-        {% block script %}
+
+<head>
+    <title>{% block title %}Mail{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'mail/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mail/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'mail/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'mail/site.webmanifest' %}">
+    {% block script %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container">
+        {% block body %}
         {% endblock %}
-    </head>
-    <body>
-        <div class="container">
-            {% block body %}
-            {% endblock %}
-        </div>
-    </body>
+    </div>
+</body>
+
 </html>
