@@ -68,7 +68,10 @@ function load_mailbox(mailbox) {
           message.innerHTML = `<div class="row"><div class="col-5">To: ${email.recipients.join(', ')}</div><div class="col">${email.subject}</div><div class="col-1">${shortDate}</div></div>`;
         } else {
           if (email.read) message.classList.add('list-group-item-secondary');
-          else message.style.color = 'black';
+          else {
+            message.style.color = 'black';
+            message.classList.add('font-weight-bold');
+          }
           message.innerHTML = `<div class="row"><div class="col-5">From: ${email.sender}</div><div class="col">${email.subject}</div><div class="col-1">${shortDate}</div></div>`;
         }
         message.addEventListener('click', () => load_message(email.id, mailbox));
