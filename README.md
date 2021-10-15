@@ -20,6 +20,8 @@ This should initialize a SQLite3 database file for your emails.
 Now, enter `python manage.py runserver` (or `python3 manage.py runserver`)
 This will open the development server. In your browser, visit the url provided, register, and login to see the site in action!
 
+NOTE: You will need to register at least two users to successfully send an email.
+
 ## Using Django Admin as a SuperUser
 
 If you want to get in through the back door:
