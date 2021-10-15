@@ -37,7 +37,7 @@ function compose_email() {
       .then(response => response.json())
       .then(result => {
         alert(result.message || result.error);
-        if (result.message) load_mailbox('sent'); //if successful, load Sent view. Otherwise, stay on Compose.  
+        if (result.message) load_mailbox('sent'); //if successful, load Sent view. Otherwise, stay on Compose view.  
       })
       .catch(error => console.log('Error:', error));
     return false;
@@ -96,22 +96,17 @@ function load_message(messageId, mailbox) {
       while (buttonContainer.firstChild) buttonContainer.removeChild(buttonContainer.firstChild); //clear any buttons from the message
       if (mailbox !== 'sent') {
         document.querySelector('#reply-button').addEventListener('click', () => reply(email));
+        const archiveButton = document.createElement('button');
+        archiveButton.setAttribute('type', 'button');
+        archiveButton.classList.add('btn', 'btn-outline-warning');
         if (email.archived) {
-          const unarchiveButton = document.createElement('button');
-          unarchiveButton.innerHTML = 'UnArchive Message';
-          unarchiveButton.setAttribute('type', 'button');
-          unarchiveButton.classList.add('btn', 'btn-outline-warning');
-          unarchiveButton.addEventListener('click', () => unarchive_message(messageId));
-          buttonContainer.append(unarchiveButton);
+          archiveButton.innerHTML = 'UnArchive Message';
+          archiveButton.addEventListener('click', () => unarchive_message(messageId));
         } else {
-          const archiveButton = document.createElement('button');
           archiveButton.innerHTML = 'Archive Message';
-          archiveButton.setAttribute('type', 'button');
-          archiveButton.classList.add('btn', 'btn-outline-warning');
           archiveButton.addEventListener('click', () => archive_message(messageId));
-          buttonContainer.append(archiveButton);
         }
-
+        buttonContainer.append(archiveButton);
       }
       fetch(`/emails/${messageId}`, { //Mark message as read
         method: 'PUT',
@@ -130,7 +125,7 @@ function archive_message(messageId) {
       archived: true,
     })
   })
-    .then(res => {
+    .then(() => {
       alert('Message Archived');
       load_mailbox('inbox');
     })
@@ -144,7 +139,7 @@ function unarchive_message(messageId) {
       archived: false,
     })
   })
-    .then(res => {
+    .then(() => {
       alert('Message UnArchived');
       load_mailbox('archive');
     })
